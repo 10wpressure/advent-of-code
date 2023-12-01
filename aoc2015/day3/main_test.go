@@ -74,4 +74,43 @@ var _ = Describe("Day 3", func() {
 		Expect(res).To(Equal("2565"))
 	})
 
+	It("Part 2 Test 1", func() {
+		err := os.WriteFile(fileName, []byte("^v"), 0666)
+		if err != nil {
+			log.Fatal(err)
+		}
+		f := util.OpenFile(fileName)
+		defer f.Close()
+		defer os.Remove(fileName)
+		res := part2(f)
+		fmt.Println("Part 2:", res)
+		Expect(res).To(Equal("3"))
+	})
+
+	It("Part 2 Test 2", func() {
+		err := os.WriteFile(fileName, []byte("^>v<"), 0666)
+		if err != nil {
+			log.Fatal(err)
+		}
+		f := util.OpenFile(fileName)
+		defer f.Close()
+		defer os.Remove(fileName)
+		res := part2(f)
+		fmt.Println("Part 2:", res)
+		Expect(res).To(Equal("3"))
+	})
+
+	It("Part 2 Test 3", func() {
+		err := os.WriteFile(fileName, []byte("^v^v^v^v^v"), 0666)
+		if err != nil {
+			log.Fatal(err)
+		}
+		f := util.OpenFile(fileName)
+		defer f.Close()
+		defer os.Remove(fileName)
+		res := part2(f)
+		fmt.Println("Part 2:", res)
+		Expect(res).To(Equal("11"))
+	})
+
 })
