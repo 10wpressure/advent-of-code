@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 	"sort"
+
+	"github.com/10wpressure/advent-of-code/util"
 )
 
 type Box struct {
@@ -43,18 +45,7 @@ func (b *Box) CalculateRibbon() int64 {
 	return bow + wrap
 }
 
-func part1() string {
-	f, err := os.Open("input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func(f *os.File) {
-		err := f.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}(f)
-
+func part1(f *os.File) string {
 	scanner := bufio.NewScanner(f)
 
 	var wrappingPaper int64 = 0
@@ -73,18 +64,7 @@ func part1() string {
 	return fmt.Sprintf("%d", wrappingPaper)
 }
 
-func part2() string {
-	f, err := os.Open("input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func(f *os.File) {
-		err := f.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}(f)
-
+func part2(f *os.File) string {
 	scanner := bufio.NewScanner(f)
 
 	var ribbon int64 = 0
@@ -104,10 +84,11 @@ func part2() string {
 }
 
 func main() {
-	res1 := part1()
+	f := util.OpenFile("input.txt")
+	defer f.Close()
+	res1 := part1(f)
 	log.Println("Part 1:", res1)
 
-	res2 := part2()
+	res2 := part2(f)
 	log.Println("Part 2:", res2)
-
 }

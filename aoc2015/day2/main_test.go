@@ -8,7 +8,6 @@ import (
 )
 
 func Test(t *testing.T) {
-	// test disabled because runner module was removed, will be fixed later
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "API Suite")
 }

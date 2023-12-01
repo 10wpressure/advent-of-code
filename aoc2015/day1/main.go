@@ -2,54 +2,20 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"os"
+
+	"github.com/10wpressure/advent-of-code/util"
 )
 
 const (
 	chunkSize = 100
 )
 
-func ReadInChunks(f *os.File, chunkSize int, cb func([]byte) bool) {
-	buf := make([]byte, chunkSize)
-	br := false
-
-	for {
-		n, err := f.Read(buf)
-		if err != nil && err != io.EOF {
-			log.Fatal(err)
-		}
-
-		if err == io.EOF {
-			break
-		}
-		if n == 0 {
-			break
-		}
-
-		br = cb(buf)
-		if br {
-			break
-		}
-	}
-}
-
-func part1() string {
-	f, err := os.Open("input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func(f *os.File) {
-		err := f.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}(f)
-
+func part1(f *os.File) string {
 	floor := 0
 
-	ReadInChunks(f, chunkSize, func(buf []byte) bool {
+	util.ReadInChunks(f, chunkSize, func(buf []byte) bool {
 		for i := range buf {
 			switch string(buf[i]) {
 			case "(":
@@ -64,22 +30,11 @@ func part1() string {
 	return fmt.Sprintf("%d", floor)
 }
 
-func part2() string {
-	f, err := os.Open("input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func(f *os.File) {
-		err := f.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}(f)
-
+func part2(f *os.File) string {
 	floor := 0
 	pos := 0
 
-	ReadInChunks(f, chunkSize, func(buf []byte) bool {
+	util.ReadInChunks(f, chunkSize, func(buf []byte) bool {
 		for i := 0; i < len(buf); i++ {
 			switch string(buf[i]) {
 			case "(":
@@ -99,10 +54,11 @@ func part2() string {
 }
 
 func main() {
-	res1 := part1()
+	f := util.OpenFile("input.txt")
+	defer f.Close()
+	res1 := part1(f)
 	log.Println("Part 1:", res1)
 
-	res2 := part2()
+	res2 := part2(f)
 	log.Println("Part 2:", res2)
-
 }
