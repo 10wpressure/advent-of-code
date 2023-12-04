@@ -104,7 +104,7 @@ func part2(f *os.File) string {
 	}
 
 	for k := 0; k < len(games); k++ {
-		for m := 1; m <= games[k].Matches; m++ {
+		for m := 1; m < games[k].Matches; m++ {
 			if k+m >= len(games) {
 				continue
 			}
