@@ -50,3 +50,33 @@ func FileIntoString(f *os.File) string {
 
 	return buf.String()
 }
+
+type Set[T comparable] map[T]struct{}
+
+// Add Adds a key to the set
+func (s Set[T]) Add(key T) {
+	s[key] = struct{}{}
+}
+
+// Remove Removes a key from the set
+func (s Set[T]) Remove(key T) {
+	delete(s, key)
+}
+
+// Clear Removes all keys from the set
+func (s Set[T]) Clear() {
+	for k := range s {
+		delete(s, k)
+	}
+}
+
+// Len Returns the number of keys in the set
+func (s Set[T]) Len() int {
+	return len(s)
+}
+
+// Has Returns a boolean value describing if the key exists in the set
+func (s Set[T]) Has(key T) bool {
+	_, ok := s[key]
+	return ok
+}

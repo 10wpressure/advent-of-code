@@ -17,40 +17,11 @@ const (
 
 type Game struct {
 	ID      int
-	Winning Set
+	Winning util.Set[int]
 	Owned   []int
 	Score   int
 	Doubled bool
-}
-
-type Set map[int]struct{}
-
-// Add Adds a key to the set
-func (s Set) Add(num int) {
-	s[num] = struct{}{}
-}
-
-// Remove Removes a key from the set
-func (s Set) Remove(num int) {
-	delete(s, num)
-}
-
-// Clear Removes all keys from the set
-func (s Set) Clear() {
-	for k := range s {
-		delete(s, k)
-	}
-}
-
-// Len Returns the number of keys in the set
-func (s Set) Len() int {
-	return len(s)
-}
-
-// Has Returns a boolean value describing if the key exists in the set
-func (s Set) Has(num int) bool {
-	_, ok := s[num]
-	return ok
+	Matches int
 }
 
 func process(f *os.File) []Game {
@@ -58,7 +29,7 @@ func process(f *os.File) []Game {
 
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
-		winningSet := make(Set)
+		winningSet := make(util.Set[int])
 		ownedSlice := make([]int, 0)
 
 		line := scanner.Text()
@@ -92,6 +63,7 @@ func process(f *os.File) []Game {
 			Owned:   ownedSlice,
 			Score:   0,
 			Doubled: false,
+			Matches: 0,
 		})
 	}
 	return games
@@ -121,7 +93,30 @@ func part1(f *os.File) string {
 }
 
 func part2(f *os.File) string {
-	return ""
+	result := 0
+	games := process(f)
+	for k := 0; k < len(games); k++ {
+		for j := 0; j < len(games[k].Owned); j++ {
+			if games[k].Winning.Has(games[k].Owned[j]) {
+				games[k].Matches++
+			}
+		}
+	}
+
+	for k := 0; k < len(games); k++ {
+		for m := 1; m <= games[k].Matches; m++ {
+			if k+m >= len(games) {
+				continue
+			}
+			games[k+m].Matches++
+		}
+	}
+
+	for k := 0; k < len(games); k++ {
+		fmt.Printf("Game %d has %d matches\n", games[k].ID, games[k].Matches)
+		result += games[k].Matches
+	}
+	return strconv.Itoa(result)
 }
 
 func main() {
