@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/10wpressure/advent-of-code/util"
+	"github.com/Workiva/go-datastructures/set"
 )
 
 const (
@@ -15,22 +16,46 @@ const (
 	chunkSize = 100
 )
 
-type Game struct {
+type Card struct {
 	ID      int
-	Winning util.Set[int]
-	Owned   []int
+	Winning *set.Set
+	Owned   *set.Set
 	Score   int
 	Doubled bool
 	Matches int
 }
 
-func process(f *os.File) []Game {
-	games := make([]Game, 0)
+func (c *Card) Count() int {
+	counter := 0
+	for _, v := range c.Winning.Flatten() {
+		if c.Owned.Exists(v) {
+			counter++
+		}
+	}
+	return counter
+}
+
+func (c *Card) CalculateScore() int {
+	for j := 0; j < int(c.Owned.Len()); j++ {
+		if c.Winning.Exists(c.Owned.Flatten()[j]) {
+			if !c.Doubled {
+				c.Score = 1
+				c.Doubled = true
+			} else {
+				c.Score = c.Score * 2
+			}
+		}
+	}
+	return c.Score
+}
+
+func process(f *os.File) []*Card {
+	games := make([]*Card, 0)
 
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
-		winningSet := make(util.Set[int])
-		ownedSlice := make([]int, 0)
+		winningSet := set.New()
+		ownedSet := set.New()
 
 		line := scanner.Text()
 		s := strings.Split(line, ":")
@@ -54,13 +79,13 @@ func process(f *os.File) []Game {
 			if err != nil {
 				_ = fmt.Errorf("failed to parse digit: %s", err)
 			}
-			ownedSlice = append(ownedSlice, digit)
+			ownedSet.Add(digit)
 		}
 
-		games = append(games, Game{
+		games = append(games, &Card{
 			ID:      id,
 			Winning: winningSet,
-			Owned:   ownedSlice,
+			Owned:   ownedSet,
 			Score:   0,
 			Doubled: false,
 			Matches: 0,
@@ -71,51 +96,39 @@ func process(f *os.File) []Game {
 
 func part1(f *os.File) string {
 	result := 0
-	games := process(f)
-	for k := 0; k < len(games); k++ {
-		for j := 0; j < len(games[k].Owned); j++ {
-			if games[k].Winning.Has(games[k].Owned[j]) {
-				if !games[k].Doubled {
-					games[k].Score = 1
-					games[k].Doubled = true
-				} else {
-					fmt.Printf("Game %d has already been doubled\n", games[k].ID)
-					games[k].Score = games[k].Score * 2
-				}
-			}
-		}
+	cards := process(f)
+
+	for k := 0; k < len(cards); k++ {
+		cards[k].CalculateScore()
 	}
 
-	for _, v := range games {
+	for _, v := range cards {
 		result += v.Score
 	}
+
 	return strconv.Itoa(result)
 }
 
 func part2(f *os.File) string {
 	result := 0
-	games := process(f)
-	for k := 0; k < len(games); k++ {
-		for j := 0; j < len(games[k].Owned); j++ {
-			if games[k].Winning.Has(games[k].Owned[j]) {
-				games[k].Matches++
-			}
+	cards := process(f)
+
+	var multiplier = make([]int, 0)
+	for i := 0; i < len(cards); i++ {
+		multiplier = append(multiplier, 1)
+	}
+
+	for i, card := range cards {
+		count := card.Count()
+		for j := i + 1; j < i+1+count; j++ {
+			multiplier[j] += multiplier[i]
 		}
 	}
 
-	for k := 0; k < len(games); k++ {
-		for m := 1; m < games[k].Matches; m++ {
-			if k+m >= len(games) {
-				continue
-			}
-			games[k+m].Matches++
-		}
+	for i := range multiplier {
+		result += multiplier[i]
 	}
 
-	for k := 0; k < len(games); k++ {
-		fmt.Printf("Game %d has %d matches\n", games[k].ID, games[k].Matches)
-		result += games[k].Matches
-	}
 	return strconv.Itoa(result)
 }
 
