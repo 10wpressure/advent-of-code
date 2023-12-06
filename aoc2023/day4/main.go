@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/10wpressure/advent-of-code/util"
-	"github.com/Workiva/go-datastructures/set"
+	"github.com/emirpasic/gods/sets/linkedhashset"
 )
 
 const (
@@ -18,26 +18,20 @@ const (
 
 type Card struct {
 	ID      int
-	Winning *set.Set
-	Owned   *set.Set
+	Winning *linkedhashset.Set
+	Owned   *linkedhashset.Set
 	Score   int
 	Doubled bool
 	Matches int
 }
 
 func (c *Card) Count() int {
-	counter := 0
-	for _, v := range c.Winning.Flatten() {
-		if c.Owned.Exists(v) {
-			counter++
-		}
-	}
-	return counter
+	return c.Winning.Intersection(c.Owned).Size()
 }
 
 func (c *Card) CalculateScore() int {
-	for j := 0; j < int(c.Owned.Len()); j++ {
-		if c.Winning.Exists(c.Owned.Flatten()[j]) {
+	for j := 0; j < c.Owned.Size(); j++ {
+		if c.Winning.Contains(c.Owned.Values()[j]) {
 			if !c.Doubled {
 				c.Score = 1
 				c.Doubled = true
@@ -54,8 +48,8 @@ func process(f *os.File) []*Card {
 
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
-		winningSet := set.New()
-		ownedSet := set.New()
+		winningSet := linkedhashset.New()
+		ownedSet := linkedhashset.New()
 
 		line := scanner.Text()
 		s := strings.Split(line, ":")
