@@ -20,8 +20,8 @@ This repository contains my solutions for Advent of Code challenges implemented 
 The repository is organized by year, with each year containing the solutions for each day:
 
 - **`aoc2023/`**: Solutions for Advent of Code 2023.
-  - **`day01/`**: Contains the solution for Day 1.
-  - **`day02/`**: Contains the solution for Day 2.
+  - **`day1/`**: Contains the solution for Day 1.
+  - **`day2/`**: Contains the solution for Day 2.
     ...
 
 Each day's directory typically includes:
