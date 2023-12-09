@@ -8,3 +8,7 @@ type Range struct {
 func (r *Range) Contains(val int64) bool {
 	return val >= r.Start && val < r.End
 }
+
+func (r *Range) ContainsNotIncluding(val int64) bool {
+	return val > r.Start && val < r.End
+}
