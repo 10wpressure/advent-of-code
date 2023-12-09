@@ -60,4 +60,3 @@ Or create a configuration file named .aocdlconfig in your home directory or in t
 
     ```bash
     aocdl -year 2015 -day 1
-    ```
