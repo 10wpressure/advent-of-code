@@ -23,6 +23,10 @@ type Solution struct {
 	mapping []*Mapping
 }
 
+func SolutionName() string {
+	return "Day 5: If You Give A Seed A Fertilizer"
+}
+
 type Mapping struct {
 	maps []*SingleMap
 }

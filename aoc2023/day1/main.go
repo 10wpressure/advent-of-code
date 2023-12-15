@@ -16,6 +16,10 @@ const (
 	chunkSize = 100
 )
 
+func SolutionName() string {
+	return "Day 1: Trebuchet?!"
+}
+
 var Digits = map[string]int{
 	"zero":  0,
 	"one":   1,
@@ -81,7 +85,7 @@ func FindFirstAndLastDigit(s string) int {
 
 	fd = first[minFirstKey]
 	ld = last[maxLastKey]
-	//fmt.Printf("fd: %d | ld: %d\n", fd, ld)
+
 	return fd*10 + ld
 }
 
@@ -110,7 +114,6 @@ func part1(f *os.File) string {
 			}
 		}
 		res += fd + ld
-		//fmt.Printf("%d: %d | %d\n", iter, fd+ld, res)
 	}
 	return strconv.Itoa(res)
 }
@@ -125,7 +128,6 @@ func part2(f *os.File) string {
 		iter++
 		cur := FindFirstAndLastDigit(line)
 		res += cur
-		//fmt.Printf("%d: %s = %d (%d)\n", iter, line, cur, res)
 	}
 	return strconv.Itoa(res)
 }

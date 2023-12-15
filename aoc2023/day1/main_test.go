@@ -13,11 +13,23 @@ import (
 
 const (
 	testFileName = "test.txt"
+	testInput1   = `1abc2
+pqr3stu8vwx
+a1b2c3d4e5f
+treb7uchet`
+	testInput2 = `two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen
+nineeight6nine1three1eight`
 )
 
 func Test(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "API Suite")
+	RunSpecs(t, SolutionName())
 }
 
 var _ = Describe("Day 1", func() {
@@ -26,7 +38,7 @@ var _ = Describe("Day 1", func() {
 	})
 
 	It("Part 1 Test 1", func() {
-		err := os.WriteFile(testFileName, []byte("1abc2\npqr3stu8vwx\na1b2c3d4e5f\ntreb7uchet"), 0666)
+		err := os.WriteFile(testFileName, []byte(testInput1), 0666)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -38,7 +50,7 @@ var _ = Describe("Day 1", func() {
 	})
 
 	It("Part 2 Test 1", func() {
-		err := os.WriteFile(testFileName, []byte("two1nine\neightwothree\nabcone2threexyz\nxtwone3four\n4nineeightseven2\nzoneight234\n7pqrstsixteen\nnineeight6nine1three1eight"), 0666)
+		err := os.WriteFile(testFileName, []byte(testInput2), 0666)
 		if err != nil {
 			log.Fatal(err)
 		}

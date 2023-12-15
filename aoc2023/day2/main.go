@@ -15,6 +15,10 @@ const (
 	chunkSize = 100
 )
 
+func SolutionName() string {
+	return "Day 2: Cube Conundrum"
+}
+
 type Color string
 
 const (
@@ -68,15 +72,12 @@ func process(f *os.File) {
 		sets := strings.Split(s[1], ";")
 		for _, set := range sets {
 			boxes := strings.Split(set, ",")
-			//fmt.Printf("Boxes: %+v\n", boxes)
 			hash := make(map[Color]int)
 			for _, box := range boxes {
 				b := strings.Fields(box)
-				//fmt.Printf("Box: %+v\n", b)
 				amount, err := strconv.Atoi(b[0])
 				if err != nil {
 					fmt.Printf("b0: %s\n", b[0])
-					//fmt.Printf("Error: %+v\n", err)
 					amount, err = strconv.Atoi(b[1])
 					if err != nil {
 						fmt.Printf("b1: %s\n", b[1])
@@ -95,17 +96,13 @@ func process(f *os.File) {
 func part1() string {
 	result := 0
 
-	fmt.Printf("=====================================================================================================================\n")
-
 gameLoop:
 	for _, curGame := range Games {
 		for _, curSet := range curGame.S {
 			if curSet[red] > DefaultGame.S[0][red] || curSet[green] > DefaultGame.S[0][green] || curSet[blue] > DefaultGame.S[0][blue] {
-				fmt.Printf("Game %+v: impossible\n", curGame.ID)
 				continue gameLoop
 			}
 		}
-		fmt.Printf("Game %+v: possible\n", curGame.ID)
 		result += curGame.ID
 	}
 
@@ -114,7 +111,6 @@ gameLoop:
 
 func part2() string {
 	result := 0
-	fmt.Printf("=====================================================================================================================\n")
 
 	for _, curGame := range Games {
 		minSet := map[Color]int{
@@ -134,7 +130,6 @@ func part2() string {
 			}
 		}
 		power := minSet[red] * minSet[green] * minSet[blue]
-		fmt.Printf("Game %+v: %+v + %+v = %+v\n", curGame.ID, result, power, result+power)
 		result += power
 	}
 

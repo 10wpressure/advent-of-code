@@ -3,13 +3,12 @@ module github.com/10wpressure/advent-of-code
 go 1.21.4
 
 require (
-	github.com/Workiva/go-datastructures v1.1.1
+	github.com/emirpasic/gods v1.18.1
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.30.0
 )
 
 require (
-	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/nxadm/tail v1.4.8 // indirect

@@ -15,6 +15,10 @@ const (
 	chunkSize = 100
 )
 
+func SolutionName() string {
+	return "Day 3: Gear Ratios"
+}
+
 type SymbolSet map[string]struct{}
 
 // Add Adds a key to the set
@@ -138,9 +142,7 @@ func part1(f *os.File) string {
 	numbers, symbols, _ := process(f)
 
 	result := 0
-	for i, n := range numbers {
-		fmt.Printf("number %d: %+v %+v\n", i, n.Coord, n.Value)
-
+	for _, n := range numbers {
 		for y := n.Coord.y - 1; y <= n.Coord.y+1; y++ {
 			for x := n.Coord.x - 1; x <= n.Coord.x+n.Len(); x++ {
 				if y == n.Coord.y && x == n.Coord.x {
@@ -166,9 +168,7 @@ func part2(f *os.File) string {
 	numbers, symbols, _ := process(f)
 
 	result := 0
-	for i, n := range numbers {
-		fmt.Printf("number %d: %+v %+v\n", i, n.Coord, n.Value)
-
+	for _, n := range numbers {
 		for y := n.Coord.y - 1; y <= n.Coord.y+1; y++ {
 			for x := n.Coord.x - 1; x <= n.Coord.x+n.Len(); x++ {
 				if y == n.Coord.y && x == n.Coord.x {
@@ -189,8 +189,6 @@ func part2(f *os.File) string {
 						gearRatio := symbol.Details[0].Value * symbol.Details[1].Value
 						result += gearRatio
 					}
-					fmt.Printf("symbol: %+v\n", symbol)
-					fmt.Println("Details: ", symbol.Details)
 				}
 			}
 		}

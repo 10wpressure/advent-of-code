@@ -16,6 +16,10 @@ const (
 	chunkSize = 100
 )
 
+func SolutionName() string {
+	return "Day 4: Scratchcards"
+}
+
 type Card struct {
 	ID      int
 	Winning *linkedhashset.Set

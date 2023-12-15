@@ -12,22 +12,21 @@ import (
 
 const (
 	testFileName = "test.txt"
+	testInput    = `Time:      7  15   30
+Distance:  9  40  200`
 )
 
 func Test(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "API Suite")
+	RunSpecs(t, SolutionName())
 }
 
-var testInput = `Time:      7  15   30
-Distance:  9  40  200`
-
-var _ = Describe("Day 5", func() {
+var _ = Describe("Day 6", func() {
 	BeforeEach(func() {
 		_ = os.Remove(testFileName)
 	})
 
-	It("Part 1 Test 1", func() {
+	It("Part 1", func() {
 		err := os.WriteFile(testFileName, []byte(testInput), 0666)
 		if err != nil {
 			log.Fatal(err)
@@ -41,7 +40,7 @@ var _ = Describe("Day 5", func() {
 		Expect(res).To(Equal("288"))
 	})
 
-	It("Part 2 Test 1", func() {
+	It("Part 2", func() {
 		err := os.WriteFile(testFileName, []byte(testInput), 0666)
 		if err != nil {
 			log.Fatal(err)

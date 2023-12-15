@@ -56,6 +56,10 @@ type Solution struct {
 	Races []*Race
 }
 
+func SolutionName() string {
+	return "Day 6: Wait For It"
+}
+
 func (s *Solution) Calculate() int {
 	counter := 1
 	for _, race := range s.Races {

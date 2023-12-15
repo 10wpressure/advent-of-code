@@ -13,20 +13,30 @@ import (
 
 const (
 	testFileName = "test.txt"
+	testInput    = `467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..`
 )
 
 func Test(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "API Suite")
+	RunSpecs(t, SolutionName())
 }
 
-var _ = Describe("Day 1", func() {
+var _ = Describe("Day 3", func() {
 	BeforeEach(func() {
 		_ = os.Remove(testFileName)
 	})
 
-	It("Part 1 Test 1", func() {
-		err := os.WriteFile(testFileName, []byte("467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598.."), 0666)
+	It("Part 1", func() {
+		err := os.WriteFile(testFileName, []byte(testInput), 0666)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -37,8 +47,8 @@ var _ = Describe("Day 1", func() {
 		Expect(res).To(Equal("4361"))
 	})
 
-	It("Part 2 Test 1", func() {
-		err := os.WriteFile(testFileName, []byte("467..114..\n...*......\n..35..633.\n......#...\n617*......\n.....+.58.\n..592.....\n......755.\n...$.*....\n.664.598.."), 0666)
+	It("Part 2", func() {
+		err := os.WriteFile(testFileName, []byte(testInput), 0666)
 		if err != nil {
 			log.Fatal(err)
 		}
