@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 	"strings"
+
+	"golang.org/x/exp/constraints"
 )
 
 func ReadInChunks(f *os.File, chunkSize int, cb func([]byte) bool) {
@@ -33,6 +35,16 @@ func ReadInChunks(f *os.File, chunkSize int, cb func([]byte) bool) {
 }
 
 func OpenFile(path string) *os.File {
+	if strings.HasPrefix(path, "../") {
+		wd, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
+		}
+		wd = strings.TrimSuffix(wd, "/part1")
+		wd = strings.TrimSuffix(wd, "/part2")
+		path = strings.Join([]string{wd, path}, "/")
+	}
+
 	f, err := os.Open(path)
 	if err != nil {
 		log.Fatal(err)
@@ -107,4 +119,34 @@ func removeDups(elements []string) (nodups []string) {
 		}
 	}
 	return
+}
+
+type Number interface {
+	constraints.Integer
+}
+
+func GCD[T Number](a, b T) T {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
+
+func LCM[T Number](integers []T) T {
+	if len(integers) < 2 {
+		panic("LCM requires at least two integers")
+	}
+
+	result := integers[0]
+	for i := 1; i < len(integers); i++ {
+		result = lcm(result, integers[i])
+	}
+
+	return result
+}
+
+func lcm[T Number](a, b T) T {
+	return a * b / GCD(a, b)
 }
