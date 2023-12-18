@@ -150,3 +150,20 @@ func LCM[T Number](integers []T) T {
 func lcm[T Number](a, b T) T {
 	return a * b / GCD(a, b)
 }
+
+func SumSlice[T Number](numbers []T) T {
+	var total T = 0
+	for _, num := range numbers {
+		total += num
+	}
+	return total
+}
+
+func SliceContainsOnlyZeroes(nums []int64) bool {
+	for _, v := range nums {
+		if v != 0 {
+			return false
+		}
+	}
+	return true
+}
