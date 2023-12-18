@@ -15,146 +15,75 @@ const (
 	chunkSize = 100
 )
 
-type Direction int
-
-const (
-	None Direction = iota
-	L
-	R
-)
-
-func (d Direction) String() string {
-	switch d {
-	case L:
-		return "L"
-	case R:
-		return "R"
-	default:
-		log.Fatalf("invalid direction: %d", d)
-		return ""
-	}
-}
-
-func FromString(r rune) Direction {
-	switch r {
-	case 'L':
-		return L
-	case 'R':
-		return R
-	default:
-		log.Fatalf("invalid direction: %c", r)
-		return None
-	}
-}
-
 type Solution struct {
-	Root       *Node
-	Directions []Direction
-	Network    map[string]*Node
-	Steps      int64
-	EndsWithA  []string
-	EndsWithZ  []string
-	Answers    []int64
-}
-
-type Node struct {
-	Name string
-	L    string
-	R    string
+	Histories [][]int64
 }
 
 func SolutionName() string {
-	return "Day 8: Haunted Wasteland"
+	return "Day 9: Mirage Maintenance"
 }
 
 func NewSolution() *Solution {
-	return &Solution{Directions: make([]Direction, 0), Network: make(map[string]*Node)}
-}
-
-func (s *Solution) ParseDirections(input string) {
-	for _, v := range input {
-		s.Directions = append(s.Directions, FromString(v))
-	}
-	//fmt.Printf("%v\n", s.Directions)
-}
-
-func (s *Solution) ParseNode(input string) *Node {
-	nodeStr := strings.Fields(input)
-	key := nodeStr[0]
-	left := strings.Trim(nodeStr[2], "(,)")
-	right := strings.Trim(nodeStr[3], "(,)")
-	//fmt.Printf("key: %s, left: %s, right: %s\n", key, left, right)
-	s.Network[key] = &Node{
-		Name: key,
-		L:    left,
-		R:    right,
-	}
-
-	return s.Network[key]
-}
-
-func EndsWithA(s string) bool {
-	return strings.HasSuffix(s, "A")
-}
-
-func EndsWithZ(s string) bool {
-	return strings.HasSuffix(s, "Z")
+	return &Solution{}
 }
 
 func (s *Solution) Parse(f *os.File) {
 	scanner := bufio.NewScanner(f)
-	scanner.Scan() // 1st line must be directions
-	directions := scanner.Text()
-	s.ParseDirections(directions)
-	scanner.Scan() // 2nd line is blank
-
 	for scanner.Scan() {
-		nodeToParse := scanner.Text()
-		node := s.ParseNode(nodeToParse)
-		if EndsWithA(node.Name) {
-			s.EndsWithA = append(s.EndsWithA, node.Name)
+		parsed := strings.Fields(scanner.Text())
+		history := make([][]int64, 1)
+		history[0] = make([]int64, len(parsed))
+		for i, v := range parsed {
+			n, err := strconv.ParseInt(v, 10, 64)
+			if err != nil {
+				log.Fatal(err)
+			}
+			history[0][i] = n
+			//fmt.Printf("%v: %v\n", i, history[0][i])
 		}
-		if EndsWithZ(node.Name) {
-			s.EndsWithZ = append(s.EndsWithZ, node.Name)
-		}
+		s.Histories = append(s.Histories, history...)
 	}
-}
-
-func (s *Solution) Traverse(root *Node) int64 {
-	var (
-		i           = 0
-		steps int64 = 0
-		dir         = s.Directions[i]
-	)
-
-	for {
-		switch dir {
-		case L:
-			root = s.Network[root.L]
-		default:
-			root = s.Network[root.R]
-		}
-		//fmt.Printf("%s %s\n", root.Name, dir)
-		steps++
-		if EndsWithZ(root.Name) {
-			break
-		}
-
-		i++
-		dir = s.Directions[i%len(s.Directions)]
-	}
-	return steps
 }
 
 func (s *Solution) Part2() string {
-	for _, v := range s.EndsWithA {
-		root := s.Network[v]
-		answer := s.Traverse(root)
-		s.Answers = append(s.Answers, answer)
-	}
-	res := util.LCM(s.Answers)
+	var predictions = make([]int64, 0)
+	for _, h := range s.Histories {
+		diffs := GetAllDiffsForOneHistory(h)
 
-	return strconv.FormatInt(res, 10)
+		diffs[len(diffs)-1] = append([]int64{0}, diffs[len(diffs)-1]...)
+		for i := len(diffs) - 2; i >= 0; i-- {
+			additionalValue := diffs[i][0] - diffs[i+1][0]
+			diffs[i] = append([]int64{additionalValue}, diffs[i]...)
+		}
+		predictions = append(predictions, diffs[0][0])
+	}
+
+	return strconv.FormatInt(util.SumSlice(predictions), 10)
+}
+
+func GetAllDiffsForOneHistory(h []int64) [][]int64 {
+	diffs := make([][]int64, 0)
+	diffs = append(diffs, h)
+
+	for {
+		cur := diffs[len(diffs)-1]
+		d := GetDiffsForOneSlice(cur)
+		diffs = append(diffs, d)
+
+		if util.SliceContainsOnlyZeroes(d) {
+			break
+		}
+	}
+	return diffs
+}
+
+func GetDiffsForOneSlice(nums []int64) []int64 {
+	var diffs []int64
+	for i := 1; i < len(nums); i++ {
+		diffs = append(diffs, nums[i]-nums[i-1])
+	}
+
+	return diffs
 }
 
 func Solve() string {
@@ -162,6 +91,6 @@ func Solve() string {
 	defer f.Close()
 	a := NewSolution()
 	a.Parse(f)
-	part2 := a.Part2()
-	return part2
+	part1 := a.Part2()
+	return part1
 }

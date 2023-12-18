@@ -19,19 +19,11 @@ func Test(t *testing.T) {
 	RunSpecs(t, SolutionName())
 }
 
-var testInput = `LR
+var testInput = `0 3 6 9 12 15
+1 3 6 10 15 21
+10 13 16 21 30 45`
 
-11A = (11B, XXX)
-11B = (XXX, 11Z)
-11Z = (11B, XXX)
-22A = (22B, XXX)
-22B = (22C, 22C)
-22C = (22Z, 22Z)
-22Z = (22B, 22B)
-XXX = (XXX, XXX)
-`
-
-var _ = Describe("Day 8", func() {
+var _ = Describe("Day 9", func() {
 	BeforeEach(func() {
 		_ = os.Remove(testFileName)
 	})
@@ -47,7 +39,7 @@ var _ = Describe("Day 8", func() {
 		a := NewSolution()
 		a.Parse(f)
 		res := a.Part2()
-		Expect(res).To(Equal("6"))
+		Expect(res).To(Equal("2"))
 	})
 
 })
