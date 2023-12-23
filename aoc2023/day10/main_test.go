@@ -1,4 +1,4 @@
-package part1
+package main
 
 import (
 	"log"
@@ -42,5 +42,20 @@ var _ = Describe(SolutionName(), func() {
 		a.Parse(f)
 		res := a.Part1()
 		Expect(res).To(Equal("8"))
+	})
+
+	It("Part 2", func() {
+		err := os.WriteFile(testFileName, []byte(testInput), 0666)
+		if err != nil {
+			log.Fatal(err)
+		}
+		f := util.OpenFile(testFileName)
+		defer f.Close()
+		defer os.Remove(testFileName)
+		a := NewSolution()
+		a.Parse(f)
+		_ = a.Part1()
+		res := a.Part2()
+		Expect(res).To(Equal("1"))
 	})
 })
